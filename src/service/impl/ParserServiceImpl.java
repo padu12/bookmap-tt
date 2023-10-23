@@ -4,19 +4,34 @@ import model.InputFileInfo;
 import service.ParserService;
 
 public class ParserServiceImpl implements ParserService {
+    private static final int FIRST_LINE_INDEX = 0;
+    private static final int SECOND_LINE_INDEX = 1;
+    private static final int THIRD_LINE_INDEX = 2;
+    private static final int QUANTITY_OF_QUERIES_INDEX = 1;
+    private static final int NUMBER_OF_ARGUMENTS_IN_QUERY = 3;
+
     public InputFileInfo parse(String info) {
         InputFileInfo inputFileInfo = new InputFileInfo();
         String[] infoLines = info.split(System.lineSeparator());
-        inputFileInfo.setString(infoLines[1]);
-        int parsedQuantityOfQueries = Integer.parseInt(infoLines[0].split(" ")[1]);
-        int[][] queries = new int[parsedQuantityOfQueries][3];
-        for (int i = 2; i < infoLines.length; i++) {
+        inputFileInfo.setString(infoLines[SECOND_LINE_INDEX]);
+        inputFileInfo.setQueries(parseQueries(infoLines));
+        return inputFileInfo;
+    }
+
+    private static int[][] parseQueries(String[] infoLines) {
+        int parsedQuantityOfQueries = getQuantityOfQueries(infoLines);
+        int[][] queries = new int[parsedQuantityOfQueries][NUMBER_OF_ARGUMENTS_IN_QUERY];
+        for (int i = THIRD_LINE_INDEX, k = 0; i < infoLines.length; i++, k++) {
             String[] query = infoLines[i].split(" ");
-            for (int l = 0; l < 3; l++) {
-                queries[i - 2][l] = Integer.parseInt(query[l]);
+            for (int l = 0; l < NUMBER_OF_ARGUMENTS_IN_QUERY; l++) {
+                queries[k][l] = Integer.parseInt(query[l]);
             }
         }
-        inputFileInfo.setQueries(queries);
-        return inputFileInfo;
+        return queries;
+    }
+
+    private static int getQuantityOfQueries(String[] infoLines) {
+        String[] lengthOfStringAndQuantityOfQueries = infoLines[FIRST_LINE_INDEX].split(" ");
+        return Integer.parseInt(lengthOfStringAndQuantityOfQueries[QUANTITY_OF_QUERIES_INDEX]);
     }
 }

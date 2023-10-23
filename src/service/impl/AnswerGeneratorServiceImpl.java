@@ -11,15 +11,11 @@ public class AnswerGeneratorServiceImpl implements AnswerGeneratorService {
             int right = query[1] - 1;
             int k = query[2] - 1;
             String substring = inputFileInfo.getString().substring(left, right + 1);
-            char charWithKIndex = substring.charAt(k);
             int inputCount = findInputNumberByIndex(substring, k);
-            if (charWithKIndex == 'A') {
-                int indexOfBInput = findIndexByInputCountAndChar(substring, 'B', inputCount);
-                stringBuilder.append(indexOfBInput).append(System.lineSeparator());
-            } else if (charWithKIndex == 'B') {
-                int indexOfBInput = findIndexByInputCountAndChar(substring, 'A', inputCount);
-                stringBuilder.append(indexOfBInput).append(System.lineSeparator());
-            }
+            char charWithKIndex = substring.charAt(k);
+            char invertedLetter = charWithKIndex == 'A' ? 'B' : 'A';
+            int indexOfBInput = findIndexByInputCountAndChar(substring, invertedLetter, inputCount);
+            stringBuilder.append(indexOfBInput).append(System.lineSeparator());
         }
         return stringBuilder.toString();
     }
@@ -34,10 +30,10 @@ public class AnswerGeneratorServiceImpl implements AnswerGeneratorService {
         return counter;
     }
 
-    private static int findIndexByInputCountAndChar(String string, char ch, int inputCount) {
+    private static int findIndexByInputCountAndChar(String string, char letter, int inputCount) {
         int counter = 0;
         for (int i = 0; i < string.length(); i++) {
-            if (string.charAt(i) == ch) {
+            if (string.charAt(i) == letter) {
                 counter++;
                 if (counter == inputCount) {
                     return ++i;
