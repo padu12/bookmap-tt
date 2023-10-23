@@ -6,6 +6,7 @@ input.txt
 output.txt
 .idea
 bookmap--tt.iml
+src/META-INF
 
 ### Eclipse ###
 .apt_generated
