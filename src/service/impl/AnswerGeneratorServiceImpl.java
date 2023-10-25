@@ -16,6 +16,7 @@ public class AnswerGeneratorServiceImpl implements AnswerGeneratorService {
         fillCounters(inputFileInfo);
         for (int[] query : inputFileInfo.getQueries()) {
             int leftBorder = query[0] - 1;
+            int rightBorder = query[1] - 1;
             int localKey = query[2] - 1;
             String string = inputFileInfo.getString();
             int localInputCount = findLettersLocalInputCountByIndex(string, localKey, leftBorder);
@@ -25,7 +26,8 @@ public class AnswerGeneratorServiceImpl implements AnswerGeneratorService {
                     string,
                     invertedLetter,
                     localInputCount,
-                    leftBorder
+                    leftBorder,
+                    rightBorder
             );
             stringBuilder.append(localIndexOfInvertedLetter).append(System.lineSeparator());
         }
@@ -64,25 +66,23 @@ public class AnswerGeneratorServiceImpl implements AnswerGeneratorService {
             String string,
             char letter,
             int localInputCount,
-            int leftBorder
+            int leftBorder,
+            int rightBorder
     ) {
         int globalIndexOfFirstLetter = string.indexOf(letter, leftBorder);
         int preInputCount;
+        int globalIndexOfGoalLetter;
         if (letter == 'A') {
-            preInputCount = inputCountsOfA.get(globalIndexOfFirstLetter) - 1; // input count of first letter
-            if (inputCountsOfAInverted.get(localInputCount + preInputCount) == null) {
-                return -1;
-            } else {
-                return inputCountsOfAInverted.get(localInputCount + preInputCount) - leftBorder + 1;
-            }
+            preInputCount = inputCountsOfA.get(globalIndexOfFirstLetter) - 1;
+            globalIndexOfGoalLetter = inputCountsOfAInverted.get(localInputCount + preInputCount);
         } else {
             preInputCount = inputCountsOfB.get(globalIndexOfFirstLetter) - 1;
-            if (inputCountsOfBInverted.get(localInputCount + preInputCount) == null) {
-                return -1;
-            } else {
-                return inputCountsOfBInverted.get(localInputCount + preInputCount) - leftBorder + 1;
-            }
-
+            globalIndexOfGoalLetter = inputCountsOfBInverted.get(localInputCount + preInputCount);
+        }
+        if (globalIndexOfGoalLetter > rightBorder - leftBorder) {
+            return -1;
+        } else {
+            return globalIndexOfGoalLetter - leftBorder + 1;
         }
     }
 }
