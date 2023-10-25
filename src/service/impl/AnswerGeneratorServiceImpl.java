@@ -71,7 +71,7 @@ public class AnswerGeneratorServiceImpl implements AnswerGeneratorService {
     ) {
         int globalIndexOfFirstLetter = string.indexOf(letter, leftBorder);
         int preInputCount;
-        int globalIndexOfGoalLetter;
+        Integer globalIndexOfGoalLetter;
         if (letter == 'A') {
             preInputCount = inputCountsOfA.get(globalIndexOfFirstLetter) - 1;
             globalIndexOfGoalLetter = inputCountsOfAInverted.get(localInputCount + preInputCount);
@@ -79,7 +79,7 @@ public class AnswerGeneratorServiceImpl implements AnswerGeneratorService {
             preInputCount = inputCountsOfB.get(globalIndexOfFirstLetter) - 1;
             globalIndexOfGoalLetter = inputCountsOfBInverted.get(localInputCount + preInputCount);
         }
-        if (globalIndexOfGoalLetter > rightBorder - leftBorder) {
+        if (globalIndexOfGoalLetter == null || globalIndexOfGoalLetter > rightBorder - leftBorder) {
             return -1;
         } else {
             return globalIndexOfGoalLetter - leftBorder + 1;
