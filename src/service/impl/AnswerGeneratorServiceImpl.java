@@ -1,15 +1,13 @@
 package service.impl;
 
-import java.util.HashMap;
-import java.util.Map;
 import model.InputFileInfo;
 import service.AnswerGeneratorService;
 
 public class AnswerGeneratorServiceImpl implements AnswerGeneratorService {
-    private final Map<Integer, Integer> inputCountsOfA = new HashMap<>();
-    private final Map<Integer, Integer> inputCountsOfB = new HashMap<>();
-    private final Map<Integer, Integer> inputCountsOfAInverted = new HashMap<>();
-    private final Map<Integer, Integer> inputCountsOfBInverted = new HashMap<>();
+    private int[] inputCountsOfA;
+    private int[] inputCountsOfB;
+    private int[] inputCountsOfAInverted;
+    private int[] inputCountsOfBInverted;
 
     public String generate(InputFileInfo inputFileInfo) {
         StringBuilder stringBuilder = new StringBuilder();
@@ -36,15 +34,19 @@ public class AnswerGeneratorServiceImpl implements AnswerGeneratorService {
 
     private void fillCounters(InputFileInfo inputFileInfo) {
         char[] chars = inputFileInfo.getString().toCharArray();
-        int inputCountOfA = 1;
-        int inputCountOfB = 1;
+        int indexA = 0;
+        int indexB = 0;
+        inputCountsOfA = new int[inputFileInfo.getString().length()];
+        inputCountsOfB = new int[inputFileInfo.getString().length()];
+        inputCountsOfAInverted = new int[inputFileInfo.getString().length()];
+        inputCountsOfBInverted = new int[inputFileInfo.getString().length()];
         for (int i = 0; i < chars.length; i++) {
             if (chars[i] == 'A') {
-                inputCountsOfA.put(i, inputCountOfA);
-                inputCountsOfAInverted.put(inputCountOfA++, i);
+                inputCountsOfA[indexA] = i;
+                inputCountsOfAInverted[i] = indexA++;
             } else {
-                inputCountsOfB.put(i, inputCountOfB);
-                inputCountsOfBInverted.put(inputCountOfB++, i);
+                inputCountsOfB[indexB] = i;
+                inputCountsOfBInverted[i] = indexB++;
             }
         }
     }
@@ -54,11 +56,11 @@ public class AnswerGeneratorServiceImpl implements AnswerGeneratorService {
         char currentChar = string.charAt(globalKey);
         int globalIndexOfFirstLetter = string.indexOf(currentChar, leftBorder);
         if (currentChar == 'A') {
-            int preInputCount = inputCountsOfA.get(globalIndexOfFirstLetter) - 1;
-            return inputCountsOfA.get(globalKey) - preInputCount;
+            int preInputCount = inputCountsOfAInverted[globalIndexOfFirstLetter];
+            return inputCountsOfAInverted[globalKey] - preInputCount + 1;
         } else {
-            int preInputCount = inputCountsOfB.get(globalIndexOfFirstLetter) - 1;
-            return inputCountsOfB.get(globalKey) - preInputCount;
+            int preInputCount = inputCountsOfBInverted[globalIndexOfFirstLetter];
+            return inputCountsOfBInverted[globalKey] - preInputCount + 1;
         }
     }
 
@@ -71,16 +73,15 @@ public class AnswerGeneratorServiceImpl implements AnswerGeneratorService {
     ) {
         int globalIndexOfFirstLetter = string.indexOf(letter, leftBorder);
         int preInputCount;
-        Integer globalIndexOfGoalLetter;
+        int globalIndexOfGoalLetter;
         if (letter == 'A') {
-            preInputCount = inputCountsOfA.get(globalIndexOfFirstLetter) - 1;
-            globalIndexOfGoalLetter = inputCountsOfAInverted.get(localInputCount + preInputCount);
+            preInputCount = inputCountsOfAInverted[globalIndexOfFirstLetter];
+            globalIndexOfGoalLetter = inputCountsOfA[localInputCount + preInputCount - 1];
         } else {
-            preInputCount = inputCountsOfB.get(globalIndexOfFirstLetter) - 1;
-            globalIndexOfGoalLetter = inputCountsOfBInverted.get(localInputCount + preInputCount);
+            preInputCount = inputCountsOfBInverted[globalIndexOfFirstLetter];
+            globalIndexOfGoalLetter = inputCountsOfB[localInputCount + preInputCount - 1];
         }
-        if (globalIndexOfGoalLetter == null ||
-                globalIndexOfGoalLetter - leftBorder > rightBorder - leftBorder) {
+        if (globalIndexOfGoalLetter - leftBorder > rightBorder - leftBorder) {
             return -1;
         } else {
             return globalIndexOfGoalLetter - leftBorder + 1;
