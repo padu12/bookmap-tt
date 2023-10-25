@@ -79,7 +79,8 @@ public class AnswerGeneratorServiceImpl implements AnswerGeneratorService {
             preInputCount = inputCountsOfB.get(globalIndexOfFirstLetter) - 1;
             globalIndexOfGoalLetter = inputCountsOfBInverted.get(localInputCount + preInputCount);
         }
-        if (globalIndexOfGoalLetter == null || globalIndexOfGoalLetter > rightBorder - leftBorder) {
+        if (globalIndexOfGoalLetter == null ||
+                globalIndexOfGoalLetter - leftBorder > rightBorder - leftBorder) {
             return -1;
         } else {
             return globalIndexOfGoalLetter - leftBorder + 1;
