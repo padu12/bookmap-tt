@@ -4,7 +4,7 @@ out/
 !**/src/test/**/out/
 input.txt
 output.txt
-output1.txt
+correct_output.txt
 .idea
 bookmap--tt.iml
 src/META-INF
