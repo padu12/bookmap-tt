@@ -42,12 +42,18 @@ public class AnswerGeneratorServiceImpl implements AnswerGeneratorService {
         inputCountsOfBInverted = new int[inputFileInfo.getString().length()];
         for (int i = 0; i < chars.length; i++) {
             if (chars[i] == 'A') {
-                inputCountsOfA[indexA] = i;
-                inputCountsOfAInverted[i] = indexA++;
+                inputCountsOfA[i] = indexA;
+                inputCountsOfAInverted[indexA++] = i;
             } else {
-                inputCountsOfB[indexB] = i;
-                inputCountsOfBInverted[i] = indexB++;
+                inputCountsOfB[i] = indexB;
+                inputCountsOfBInverted[indexB++] = i;
             }
+        }
+        for (int i = indexA; i < inputCountsOfAInverted.length; i++) {
+            inputCountsOfAInverted[i] = -1;
+        }
+        for (int i = indexB; i < inputCountsOfBInverted.length; i++) {
+            inputCountsOfBInverted[i] = -1;
         }
     }
 
@@ -56,11 +62,11 @@ public class AnswerGeneratorServiceImpl implements AnswerGeneratorService {
         char currentChar = string.charAt(globalKey);
         int globalIndexOfFirstLetter = string.indexOf(currentChar, leftBorder);
         if (currentChar == 'A') {
-            int preInputCount = inputCountsOfAInverted[globalIndexOfFirstLetter];
-            return inputCountsOfAInverted[globalKey] - preInputCount;
+            int preInputCount = inputCountsOfA[globalIndexOfFirstLetter];
+            return inputCountsOfA[globalKey] - preInputCount;
         } else {
-            int preInputCount = inputCountsOfBInverted[globalIndexOfFirstLetter];
-            return inputCountsOfBInverted[globalKey] - preInputCount;
+            int preInputCount = inputCountsOfB[globalIndexOfFirstLetter];
+            return inputCountsOfB[globalKey] - preInputCount;
         }
     }
 
@@ -78,11 +84,11 @@ public class AnswerGeneratorServiceImpl implements AnswerGeneratorService {
         int preInputCount;
         int globalIndexOfGoalLetter;
         if (letter == 'A') {
-            preInputCount = inputCountsOfAInverted[globalIndexOfFirstLetter];
-            globalIndexOfGoalLetter = inputCountsOfA[localInputCount + preInputCount];
+            preInputCount = inputCountsOfA[globalIndexOfFirstLetter];
+            globalIndexOfGoalLetter = inputCountsOfAInverted[localInputCount + preInputCount];
         } else {
-            preInputCount = inputCountsOfBInverted[globalIndexOfFirstLetter];
-            globalIndexOfGoalLetter = inputCountsOfB[localInputCount + preInputCount];
+            preInputCount = inputCountsOfB[globalIndexOfFirstLetter];
+            globalIndexOfGoalLetter = inputCountsOfBInverted[localInputCount + preInputCount];
         }
         if (globalIndexOfGoalLetter < leftBorder || globalIndexOfGoalLetter > rightBorder) {
             return -1;
