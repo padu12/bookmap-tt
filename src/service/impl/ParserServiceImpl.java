@@ -22,7 +22,10 @@ public class ParserServiceImpl implements ParserService {
         int parsedQuantityOfQueries = getQuantityOfQueries(infoLines);
         int[][] queries = new int[parsedQuantityOfQueries][NUMBER_OF_ARGUMENTS_IN_QUERY];
         for (int i = THIRD_LINE_INDEX, k = 0; i < infoLines.length; i++, k++) {
-            queries[k] = parseOneQuery(infoLines[i]);
+            String[] query = infoLines[i].split(" ");
+            for (int l = 0; l < NUMBER_OF_ARGUMENTS_IN_QUERY; l++) {
+                queries[k][l] = Integer.parseInt(query[l]);
+            }
         }
         return queries;
     }
