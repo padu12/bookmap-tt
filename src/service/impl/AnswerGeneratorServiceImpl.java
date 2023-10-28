@@ -84,10 +84,11 @@ public class AnswerGeneratorServiceImpl implements AnswerGeneratorService {
             preInputCount = inputCountsOfBInverted[globalIndexOfFirstLetter];
             globalIndexOfGoalLetter = inputCountsOfB[localInputCount + preInputCount];
         }
-        if (globalIndexOfGoalLetter - leftBorder > rightBorder - leftBorder) {
+        int localIndexOfGoalLetter = globalIndexOfGoalLetter - leftBorder;
+        if (localIndexOfGoalLetter > rightBorder - leftBorder) {
             return -1;
         } else {
-            return globalIndexOfGoalLetter - leftBorder + 1;
+            return localIndexOfGoalLetter + 1;
         }
     }
 }
