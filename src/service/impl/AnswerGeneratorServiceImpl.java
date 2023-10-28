@@ -57,10 +57,10 @@ public class AnswerGeneratorServiceImpl implements AnswerGeneratorService {
         int globalIndexOfFirstLetter = string.indexOf(currentChar, leftBorder);
         if (currentChar == 'A') {
             int preInputCount = inputCountsOfAInverted[globalIndexOfFirstLetter];
-            return inputCountsOfAInverted[globalKey] - preInputCount + 1;
+            return inputCountsOfAInverted[globalKey] - preInputCount;
         } else {
             int preInputCount = inputCountsOfBInverted[globalIndexOfFirstLetter];
-            return inputCountsOfBInverted[globalKey] - preInputCount + 1;
+            return inputCountsOfBInverted[globalKey] - preInputCount;
         }
     }
 
@@ -72,14 +72,17 @@ public class AnswerGeneratorServiceImpl implements AnswerGeneratorService {
             int rightBorder
     ) {
         int globalIndexOfFirstLetter = string.indexOf(letter, leftBorder);
+        if (globalIndexOfFirstLetter < leftBorder || globalIndexOfFirstLetter > rightBorder) {
+            return -1;
+        }
         int preInputCount;
         int globalIndexOfGoalLetter;
         if (letter == 'A') {
             preInputCount = inputCountsOfAInverted[globalIndexOfFirstLetter];
-            globalIndexOfGoalLetter = inputCountsOfA[localInputCount + preInputCount - 1];
+            globalIndexOfGoalLetter = inputCountsOfA[localInputCount + preInputCount];
         } else {
             preInputCount = inputCountsOfBInverted[globalIndexOfFirstLetter];
-            globalIndexOfGoalLetter = inputCountsOfB[localInputCount + preInputCount - 1];
+            globalIndexOfGoalLetter = inputCountsOfB[localInputCount + preInputCount];
         }
         if (globalIndexOfGoalLetter - leftBorder > rightBorder - leftBorder) {
             return -1;
