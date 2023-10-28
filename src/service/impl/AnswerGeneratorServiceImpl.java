@@ -85,7 +85,8 @@ public class AnswerGeneratorServiceImpl implements AnswerGeneratorService {
             globalIndexOfGoalLetter = inputCountsOfB[localInputCount + preInputCount];
         }
         int localIndexOfGoalLetter = globalIndexOfGoalLetter - leftBorder;
-        if (localIndexOfGoalLetter > rightBorder - leftBorder) {
+        if (localIndexOfGoalLetter > rightBorder - leftBorder ||
+                localIndexOfGoalLetter < 0) {
             return -1;
         } else {
             return localIndexOfGoalLetter + 1;
